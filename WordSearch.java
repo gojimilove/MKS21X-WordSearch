@@ -1,19 +1,50 @@
+import java.util.*;
+import java.io.*;
 public class WordSearch {
 	private char[][]data;
+	private int seed;
+	private Random randgen;
+	private ArrayList<String>wordsToAdd;
+	private ArrayList<String>wordsAdded;
 
-    /**Initialize the grid to the size specified 
+    /**Initialize the grid to the size specified
      *and fill all of the positions with '_'
      *@param row is the starting height of the WordSearch
      *@param col is the starting width of the WordSearch
      */
-  public WordSearch(int rows,int cols){
+  public WordSearch(int rows,int cols, String filename) {
   	data = new char[rows][cols];
   	for (int i = 0; i < rows; i++) {
   		for (int j = 0; j < cols; j++) {
   			data[i][j] = '_';
   		}
   	}
+
+		// choose a randSeed using the clock random
+		randgen = new Random();
+
+		// read in the word text file
+		File f = new File(filename);
+		Scanner in = new Scanner(f);
+		while (in.hasNext()) {
+			String line = in.nextLine();
+			wordsToAdd.add(line);
+		}
+
+		//addAllWords()
   }
+
+	public WordSearch(int rows, int cols, String filename, int randSeed) {
+		data = new char[rows][cols];
+  	for (int i = 0; i < rows; i++) {
+  		for (int j = 0; j < cols; j++) {
+  			data[i][j] = '_';
+  		}
+  	}
+
+		// read in the word text file
+		// run addAllWords()
+	}
 
     /**Set all values in the WordSearch to underscores'_'*/
   private void clear(){
@@ -49,12 +80,12 @@ public class WordSearch {
      *@param row is the vertical locaiton of where you want the word to start.
      *@param col is the horizontal location of where you want the word to start.
      *@return true when the word is added successfully. When the word doesn't fit,
-     * or there are overlapping letters that do not match, then false is returned 
+     * or there are overlapping letters that do not match, then false is returned
      * and the board is NOT modified.
      */
   public boolean addWordHorizontal(String word,int row, int col){
-  	if (row < 0 || 
-  			col < 0 || 
+  	if (row < 0 ||
+  			col < 0 ||
   			row >= data.length ||
   			col >= data[0].length ||
   			word.length() + col > data[row].length) return false;
@@ -79,8 +110,8 @@ public class WordSearch {
      *and the board is NOT modified.
      */
   public boolean addWordVertical(String word,int row, int col){
-  	if (row < 0 || 
-  			col < 0 || 
+  	if (row < 0 ||
+  			col < 0 ||
   			row >= data.length ||
   			col >= data[0].length ||
   			word.length() + row > data.length) return false;
