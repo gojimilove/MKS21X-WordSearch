@@ -21,7 +21,8 @@ public class WordSearch {
   	}
 
 		// choose a randSeed using the clock random
-		randgen = new Random();
+		seed = System.currentTimeMillis();
+		randgen = new Random(seed);
 
 		// read in the word text file
 		File f = new File(filename);
@@ -42,7 +43,17 @@ public class WordSearch {
   		}
   	}
 
+		seed = randSeed;
+		randgen = new Random(seed);
+
 		// read in the word text file
+		File f = new File(filename);
+		Scanner in = new Scanner(f);
+		while (in.hasNext()) {
+			String line = in.nextLine();
+			wordsToAdd.add(line);
+		}
+
 		// run addAllWords()
 	}
 
@@ -62,11 +73,16 @@ public class WordSearch {
   public String toString(){
   	String result = "";
   	for (int i = 0; i < data.length; i++) {
+			result+= "|";
   		for (int j = 0; j < data[i].length; j++) {
   			result +=data[i][j];
   			if (j < data[i].length - 1) result+= " ";
   		}
-  		if (i < data.length - 1) result+= "\n";
+  		result+= "|\n";
+			result+= "Words: ";
+			for (int i = 0; i < wordsAdded.length; i++) {
+				result += wordsAdded.get(i);
+			}
   	}
   	return result;
   }
