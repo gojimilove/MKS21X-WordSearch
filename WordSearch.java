@@ -28,19 +28,15 @@ public class WordSearch {
   			data[i][j] = '_';
   		}
   	}
-
-		// choose a randSeed using the clock random
 		seed = (int)System.currentTimeMillis();
 		randgen = new Random(seed);
 
-		// read in the word text file
-		File f = new File(filename); //getting a FileNotFoundException whenever I try to use words.txt, fix!!
+		File f = new File("words.txt"); //getting a FileNotFoundException whenever I try to use words.txt, fix!!
 		Scanner in = new Scanner(f);
 		while (in.hasNext()) {
 			String line = in.nextLine();
 			wordsToAdd.add(line);
 		}
-		
 		//addAllWords()
   }
 
@@ -51,18 +47,15 @@ public class WordSearch {
   			data[i][j] = '_';
   		}
   	}
-
 		seed = randSeed;
 		randgen = new Random(seed);
 
-		// read in the word text file
-		File f = new File(filename);
+		File f = new File("words.txt");
 		Scanner in = new Scanner(f);
 		while (in.hasNext()) {
 			String line = in.nextLine();
 			wordsToAdd.add(line);
 		}
-		
 		// run addAllWords()
 	}
 
@@ -177,7 +170,7 @@ public class WordSearch {
   }
 
   /**Attempts to add a given word to the specified position of the WordGrid.
-     *The word is added in the direction rowIncrement,colIncrement 
+     *The word is added in the direction rowIncrement,colIncrement
      *Words must have a corresponding letter to match any letters that it overlaps.
      *
      *@param word is any text to be added to the word grid.
@@ -185,7 +178,7 @@ public class WordSearch {
      *@param col is the horizontal location of where you want the word to start.
      *@param rowIncrement is -1,0, or 1 and represents the displacement of each letter in the row direction
      *@param colIncrement is -1,0, or 1 and represents the displacement of each letter in the col direction
-     *@return true when: the word is added successfully. 
+     *@return true when: the word is added successfully.
      *        false when: the word doesn't fit, OR  rowchange and colchange are both 0,
      *        OR there are overlapping letters that do not match
      */
@@ -212,7 +205,7 @@ public class WordSearch {
      *[ 0,-1] would add towards the left because (col - 1), with no row change
      */
   private void addAllWords() {
-  	//does something
+  	
   }
 
 }
