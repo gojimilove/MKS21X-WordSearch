@@ -88,7 +88,7 @@ public class WordSearch {
 		randgen = new Random(seed);
 		wordsToAdd = new ArrayList<>();
 		wordsAdded = new ArrayList<>();
-		
+
 		File f = new File(filename);
 		Scanner in = new Scanner(f);
 		while (in.hasNext()) {
@@ -247,8 +247,8 @@ public class WordSearch {
      *[ 0,-1] would add towards the left because (col - 1), with no row change
      */
   private void addAllWords() {
-  	int words = wordsToAdd.size();
-  	for (int i = 0; i < words; i++) {
+  	Random rng = new Random(seed);
+  	for (int i = 0; i < wordsToAdd.size(); i++) {
   		//pick random rowIncrement, colIncrement
   		//try to add the word to the board
   		System.out.println(wordsToAdd.get(i));
@@ -256,9 +256,10 @@ public class WordSearch {
   }
 
   private void addLetters() {
+		int range = (int)(Math.random());
   	for (int i = 0; i < data.length; i++) {
   		for (int j = 0; j < data[0].length; j++) {
-  			if (data[i][j] == '_' || data[i][j] == ' ') data[i][j] = 'Z';
+  			if (data[i][j] == '_' || data[i][j] == ' ') data[i][j] = ((char)('A' + (Math.abs(randgen.nextInt() % 26))));
   		}
   	}
   }
