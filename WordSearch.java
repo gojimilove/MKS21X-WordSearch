@@ -249,6 +249,13 @@ public class WordSearch {
   private void addAllWords() {
   	Random rng = new Random(seed);
   	for (int i = 0; i < wordsToAdd.size(); i++) {
+			int rowInc = randgen.nextInt() % 2;
+			int colInc = randgen.nextInt() % 2;
+			int tries = 10;
+			while (tries > 0 && !addWord(wordsToAdd.get(i), 0, 0, rowInc, colInc)) {
+				addWord(wordsToAdd.get(i), 0, 0, rowInc, colInc)
+				tries--;
+			}
   		//pick random rowIncrement, colIncrement
   		//try to add the word to the board
   		System.out.println(wordsToAdd.get(i));
