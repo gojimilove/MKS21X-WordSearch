@@ -1,8 +1,12 @@
 public class Driver {
 
   public static void main(String[] args) {
+    WordSearch WSe = null;
+    try {
+      WSe = new WordSearch(6, 10, "words.txt");
+    } catch (Exception e) {
 
-    WordSearch WSe = new WordSearch(6,10);
+    }
 
     System.out.println("WordSearch WSe = new WordSearch(6,10)");
     System.out.println(WSe);
