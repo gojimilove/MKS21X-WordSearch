@@ -253,7 +253,7 @@ public class WordSearch {
 			int colInc = randgen.nextInt() % 2;
 			int tries = 10;
 			while (tries > 0 && !addWord(wordsToAdd.get(i), 0, 0, rowInc, colInc)) {
-				addWord(wordsToAdd.get(i), 0, 0, rowInc, colInc)
+				addWord(wordsToAdd.get(i), 0, 0, rowInc, colInc);
 				tries--;
 			}
   		//pick random rowIncrement, colIncrement
