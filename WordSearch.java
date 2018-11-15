@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.*;
+
 public class WordSearch {
 	private char[][]data;
 	private int seed;
@@ -12,13 +13,26 @@ public class WordSearch {
      *@param row is the starting height of the WordSearch
      *@param col is the starting width of the WordSearch
      */
-  public WordSearch(int rows,int cols){
-  	data = new char[rows][cols];
-  	for (int i = 0; i < rows; i++) {
-  		for (int j = 0; j < cols; j++) {
+  public WordSearch() throws FileNotFoundException{
+  	data = new char[10][10];
+  	for (int i = 0; i < data.length; i++) {
+  		for (int j = 0; j < data[0].length; j++) {
   			data[i][j] = '_';
   		}
   	}
+		seed = (int)System.currentTimeMillis();
+		randgen = new Random(seed);
+		wordsToAdd = new ArrayList<>();
+		wordsAdded = new ArrayList<>();
+
+		File f = new File("words.txt");
+		Scanner in = new Scanner(f);
+		while (in.hasNext()) {
+			String line = in.next();
+			wordsToAdd.add(line);
+		}
+		System.out.println(""+wordsToAdd.size());
+		addAllWords();
   }
 
   public WordSearch(int rows,int cols, String filename) throws FileNotFoundException{
@@ -30,14 +44,17 @@ public class WordSearch {
   	}
 		seed = (int)System.currentTimeMillis();
 		randgen = new Random(seed);
+		wordsToAdd = new ArrayList<>();
+		wordsAdded = new ArrayList<>();
 
-		File f = new File("words.txt"); //getting a FileNotFoundException whenever I try to use words.txt, fix!!
+		File f = new File(filename);
 		Scanner in = new Scanner(f);
 		while (in.hasNext()) {
-			String line = in.nextLine();
+			String line = in.next();
 			wordsToAdd.add(line);
 		}
-		//addAllWords()
+		System.out.println(""+wordsToAdd.size());
+		addAllWords();
   }
 
 	public WordSearch(int rows, int cols, String filename, int randSeed) throws FileNotFoundException{
@@ -49,14 +66,16 @@ public class WordSearch {
   	}
 		seed = randSeed;
 		randgen = new Random(seed);
+		wordsToAdd = new ArrayList<>();
+		wordsAdded = new ArrayList<>();
 
-		File f = new File("words.txt");
+		File f = new File(filename);
 		Scanner in = new Scanner(f);
 		while (in.hasNext()) {
-			String line = in.nextLine();
+			String line = in.next();
 			wordsToAdd.add(line);
 		}
-		// run addAllWords()
+		addAllWords();
 	}
 
     /**Set all values in the WordSearch to underscores'_'*/
@@ -83,9 +102,9 @@ public class WordSearch {
   		result+= "|\n";
   	}
   	result+= "Words: \n";
-		//for (int j = 0; j < wordsAdded.size(); j++) {
-		//	result += wordsAdded.get(j);
-		//}
+		for (int j = 0; j < wordsAdded.size(); j++) {
+			result += wordsAdded.get(j);
+		}
 
   	return result;
   }
@@ -189,6 +208,7 @@ public class WordSearch {
     		col >= data[0].length ||
     		word.length() + row > data.length ||
    			word.length() + col > data[row].length) return false;
+    	//also return false if word doesnt fit backwards
     for (int i = 0; i < word.length(); i++) {
     	if (data[row + (i*rowIncrement)][col + (i*colIncrement)] != '_' &&
     			data[row + (i*rowIncrement)][col + (i*colIncrement)] != word.charAt(i)) return false;
@@ -197,7 +217,7 @@ public class WordSearch {
    		data[row + (i*rowIncrement)][col + (i*colIncrement)] = word.charAt(i);
    	}
    	return true;
-  }
+  } //addWord should be private
 
     /*[rowIncrement,colIncrement] examples:
      *[-1,1] would add up and the right because (row -1 each time, col + 1 each time)
