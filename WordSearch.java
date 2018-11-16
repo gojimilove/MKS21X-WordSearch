@@ -29,9 +29,10 @@ public class WordSearch {
 		Scanner in = new Scanner(f);
 		while (in.hasNext()) {
 			String line = in.next();
-			wordsToAdd.add(line);
+			wordsToAdd.add(line.toUpperCase());
 		}
 		addAllWords();
+		addLetters();
   }
 
   public WordSearch(int rows,int cols, String filename) throws FileNotFoundException{
@@ -50,9 +51,10 @@ public class WordSearch {
 		Scanner in = new Scanner(f);
 		while (in.hasNext()) {
 			String line = in.next();
-			wordsToAdd.add(line);
+			wordsToAdd.add(line.toUpperCase());
 		}
 		addAllWords();
+		addLetters();
   }
 
 	public WordSearch(int rows, int cols, String filename, int randSeed) throws FileNotFoundException{
@@ -71,9 +73,10 @@ public class WordSearch {
 		Scanner in = new Scanner(f);
 		while (in.hasNext()) {
 			String line = in.next();
-			wordsToAdd.add(line);
+			wordsToAdd.add(line.toUpperCase());
 		}
 		addAllWords();
+		addLetters();
 	}
 
 	public WordSearch(int rows, int cols, String filename, int randSeed, String answers) throws FileNotFoundException{
@@ -93,10 +96,10 @@ public class WordSearch {
 		Scanner in = new Scanner(f);
 		while (in.hasNext()) {
 			String line = in.next();
-			wordsToAdd.add(line);
+			wordsToAdd.add(line.toUpperCase());
 		}
 		addAllWords();
-		addLetters();
+		if (answers != "key") addLetters();
 	}
 
     /**Set all values in the WordSearch to underscores'_'*/
@@ -122,11 +125,23 @@ public class WordSearch {
   		}
   		result+= "|\n";
   	}
-  	result+= "Words: ";
+
+  	result+= "Words to add: ";
+		for (int j = 0; j < wordsToAdd.size(); j++) {
+			result += wordsToAdd.get(j);
+			if (j < wordsToAdd.size() - 1) result+= ", ";
+		}
+
+		result+="\n";
+
+  	result+= "Words added: ";
 		for (int j = 0; j < wordsAdded.size(); j++) {
 			result += wordsAdded.get(j);
+			if (j < wordsAdded.size() - 1) result+= ", ";
 		}
-		result = result+"(seed: "+seed+")\n";
+
+		result = result+" (seed: "+seed+")\n";
+  	
   	return result;
   }
 
@@ -223,12 +238,10 @@ public class WordSearch {
      *        OR there are overlapping letters that do not match
      */
   public boolean addWord(String word,int row, int col, int rowIncrement, int colIncrement){
-    if (row < 0 ||
-    		col < 0 ||
-    		row >= data.length ||
-    		col >= data[0].length ||
-    		word.length() + row > data.length ||
-   			word.length() + col > data[row].length) return false;
+    if ((word.length()*rowIncrement) + row > data.length ||
+    		(word.length()*colIncrement) + col > data[0].length ||
+    		(word.length()*rowIncrement) + row < 0 ||
+    		(word.length()*colIncrement) + col < 0) return false;
     	//also return false if word doesnt fit backwards
     for (int i = 0; i < word.length(); i++) {
     	if (data[row + (i*rowIncrement)][col + (i*colIncrement)] != '_' &&
@@ -247,18 +260,21 @@ public class WordSearch {
      *[ 0,-1] would add towards the left because (col - 1), with no row change
      */
   private void addAllWords() {
-  	Random rng = new Random(seed);
-  	for (int i = 0; i < wordsToAdd.size(); i++) {
+  	for (int i = 0; i < wordsToAdd.size();){
 			int rowInc = randgen.nextInt() % 2;
 			int colInc = randgen.nextInt() % 2;
-			int tries = 10;
-			while (tries > 0 && !addWord(wordsToAdd.get(i), 0, 0, rowInc, colInc)) {
-				addWord(wordsToAdd.get(i), 0, 0, rowInc, colInc);
+			int tries = 20;
+			int row = Math.abs(randgen.nextInt() % (data.length - 1));
+			int col = Math.abs(randgen.nextInt() % (data[0].length - 1));
+			while (tries > 0 && !addWord(wordsToAdd.get(i), row, col, rowInc, colInc)) {
+				//System.out.println(addWord(wordsToAdd.get(i), row, col, rowInc, colInc));
+				row = Math.abs(randgen.nextInt() % (data.length - 1));
+				col = Math.abs(randgen.nextInt() % (data[0].length - 1));
 				tries--;
 			}
-  		//pick random rowIncrement, colIncrement
-  		//try to add the word to the board
   		System.out.println(wordsToAdd.get(i));
+  		wordsAdded.add(wordsToAdd.get(i));
+  		wordsToAdd.remove(i);
   	}
   }
 
