@@ -13,7 +13,7 @@ public class WordSearch {
      *@param row is the starting height of the WordSearch
      *@param col is the starting width of the WordSearch
      */
-  
+
   public WordSearch(int rows,int cols, String filename) throws FileNotFoundException{
   	data = new char[rows][cols];
   	for (int i = 0; i < rows; i++) {
@@ -112,7 +112,7 @@ public class WordSearch {
 		}
 
 		result = result+" (seed: "+seed+")\n";
-  	
+
   	return result;
   }
 
@@ -212,7 +212,8 @@ public class WordSearch {
     if ((word.length()*rowIncrement) + row > data.length ||
     		(word.length()*colIncrement) + col > data[0].length ||
     		(word.length()*rowIncrement) + row < 0 ||
-    		(word.length()*colIncrement) + col < 0) return false;
+    		(word.length()*colIncrement) + col < 0 ||
+				(rowIncrement == 0 && colIncrement == 0)) return false;
     	//also return false if word doesnt fit backwards
     for (int i = 0; i < word.length(); i++) {
     	if (data[row + (i*rowIncrement)][col + (i*colIncrement)] != '_' &&
@@ -243,9 +244,10 @@ public class WordSearch {
 				col = Math.abs(randgen.nextInt() % (data[0].length - 1));
 				tries--;
 			}
-  		//System.out.println(wordsToAdd.get(i));
-  		wordsAdded.add(wordsToAdd.get(i));
-  		wordsToAdd.remove(i);
+			if (addWord(wordsToAdd.get(i), row, col, rowInc, colInc)) {
+				wordsAdded.add(wordsToAdd.get(i));
+			}
+			wordsToAdd.remove(i);
   	}
   }
 
