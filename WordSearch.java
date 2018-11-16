@@ -13,28 +13,7 @@ public class WordSearch {
      *@param row is the starting height of the WordSearch
      *@param col is the starting width of the WordSearch
      */
-  public WordSearch() throws FileNotFoundException{
-  	data = new char[10][10];
-  	for (int i = 0; i < data.length; i++) {
-  		for (int j = 0; j < data[0].length; j++) {
-  			data[i][j] = '_';
-  		}
-  	}
-		seed = (int)System.currentTimeMillis();
-		randgen = new Random(seed);
-		wordsToAdd = new ArrayList<>();
-		wordsAdded = new ArrayList<>();
-
-		File f = new File("words.txt");
-		Scanner in = new Scanner(f);
-		while (in.hasNext()) {
-			String line = in.next();
-			wordsToAdd.add(line.toUpperCase());
-		}
-		addAllWords();
-		addLetters();
-  }
-
+  
   public WordSearch(int rows,int cols, String filename) throws FileNotFoundException{
   	data = new char[rows][cols];
   	for (int i = 0; i < rows; i++) {
@@ -42,7 +21,7 @@ public class WordSearch {
   			data[i][j] = '_';
   		}
   	}
-		seed = (int)System.currentTimeMillis();
+		seed = ((int)System.currentTimeMillis()) % 10001;
 		randgen = new Random(seed);
 		wordsToAdd = new ArrayList<>();
 		wordsAdded = new ArrayList<>();
@@ -125,14 +104,6 @@ public class WordSearch {
   		}
   		result+= "|\n";
   	}
-
-  	result+= "Words to add: ";
-		for (int j = 0; j < wordsToAdd.size(); j++) {
-			result += wordsToAdd.get(j);
-			if (j < wordsToAdd.size() - 1) result+= ", ";
-		}
-
-		result+="\n";
 
   	result+= "Words added: ";
 		for (int j = 0; j < wordsAdded.size(); j++) {
@@ -237,7 +208,7 @@ public class WordSearch {
      *        false when: the word doesn't fit, OR  rowchange and colchange are both 0,
      *        OR there are overlapping letters that do not match
      */
-  public boolean addWord(String word,int row, int col, int rowIncrement, int colIncrement){
+  private boolean addWord(String word,int row, int col, int rowIncrement, int colIncrement){
     if ((word.length()*rowIncrement) + row > data.length ||
     		(word.length()*colIncrement) + col > data[0].length ||
     		(word.length()*rowIncrement) + row < 0 ||
@@ -272,7 +243,7 @@ public class WordSearch {
 				col = Math.abs(randgen.nextInt() % (data[0].length - 1));
 				tries--;
 			}
-  		System.out.println(wordsToAdd.get(i));
+  		//System.out.println(wordsToAdd.get(i));
   		wordsAdded.add(wordsToAdd.get(i));
   		wordsToAdd.remove(i);
   	}
@@ -289,6 +260,33 @@ public class WordSearch {
 
   public static void main(String[] args) {
   	System.out.println("welcome to wordsearch friend");
+  	System.out.println(Arrays.toString(args));
+  	int row = 0;
+  	int col = 0;
+  	String filename = "";
+  	int randSeed = 0;
+  	String answers = "";
+
+  	if (args.length > 0) {
+  		row = Integer.parseInt(args[0]);
+  		col = Integer.parseInt(args[1]);
+  		filename = args[2];
+  		if (args.length > 3) {
+  			randSeed = Integer.parseInt(args[3]);
+  		}
+  		if (args.length > 4) {
+  			answers = args[4];
+  		}
+  	}
+
+  	WordSearch puzzle = null;
+
+    try {
+      puzzle = new WordSearch(row, col, filename, randSeed, answers);
+      System.out.println(puzzle);
+    } catch (Exception e) {
+
+    }
   }
 
 }
