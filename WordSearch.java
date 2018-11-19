@@ -62,8 +62,11 @@ public class WordSearch {
 		data = new char[rows][cols];
   	for (int i = 0; i < rows; i++) {
   		for (int j = 0; j < cols; j++) {
-  			if (answers == "key")data[i][j] = ' ';
-  			else data[i][j] = '_';
+  			if (answers.equals("key")) {
+  				data[i][j] = ' ';
+  			} else {
+  				data[i][j] = '_'; 
+  			}
   		}
   	}
   	seed = randSeed;
@@ -78,7 +81,7 @@ public class WordSearch {
 			wordsToAdd.add(line.toUpperCase());
 		}
 		addAllWords();
-		if (answers != "key") addLetters();
+		if (!answers.equals("key")) addLetters();
 	}
 
     /**Set all values in the WordSearch to underscores'_'*/
@@ -261,34 +264,51 @@ public class WordSearch {
   }
 
   public static void main(String[] args) {
-  	System.out.println("welcome to wordsearch friend");
-  	System.out.println(Arrays.toString(args));
+  	//System.out.println(Arrays.toString(args));
   	int row = 0;
   	int col = 0;
   	String filename = "";
   	int randSeed = 0;
   	String answers = "";
+		WordSearch puzzle = null;
 
-  	if (args.length > 0) {
+  	if (args.length > 2) {
   		row = Integer.parseInt(args[0]);
   		col = Integer.parseInt(args[1]);
   		filename = args[2];
+
   		if (args.length > 3) {
   			randSeed = Integer.parseInt(args[3]);
+  			
+  			if (args.length > 4) {
+  				answers = args[4];
+  				try {
+      			puzzle = new WordSearch(row, col, filename, randSeed, answers);
+      			System.out.println(puzzle);
+    			} catch (Exception e) {
+
+    			}
+  			}
+
+  			else {
+  				try {
+      			puzzle = new WordSearch(row, col, filename, randSeed);
+      			System.out.println(puzzle);
+    			} catch (Exception e) {
+
+    			}
+  			}
   		}
-  		if (args.length > 4) {
-  			answers = args[4];
+
+  		else {
+  			try {
+      		puzzle = new WordSearch(row, col, filename);
+      		System.out.println(puzzle);
+    		} catch (Exception e) {
+
+    		}
   		}
   	}
-
-  	WordSearch puzzle = null;
-
-    try {
-      puzzle = new WordSearch(row, col, filename, randSeed, answers);
-      System.out.println(puzzle);
-    } catch (Exception e) {
-
-    }
   }
 
 }
