@@ -14,7 +14,7 @@ public class WordSearch {
      *@param col is the starting width of the WordSearch
      */
 
-  public WordSearch(int rows,int cols, String filename) throws FileNotFoundException{
+  public WordSearch(int rows,int cols, String filename) throws FileNotFoundException, NumberFormatException{
   	data = new char[rows][cols];
   	for (int i = 0; i < rows; i++) {
   		for (int j = 0; j < cols; j++) {
@@ -36,7 +36,7 @@ public class WordSearch {
 		addLetters();
   }
 
-	public WordSearch(int rows, int cols, String filename, int randSeed) throws FileNotFoundException{
+	public WordSearch(int rows, int cols, String filename, int randSeed) throws FileNotFoundException, NumberFormatException{
 		data = new char[rows][cols];
   	for (int i = 0; i < rows; i++) {
   		for (int j = 0; j < cols; j++) {
@@ -58,7 +58,7 @@ public class WordSearch {
 		addLetters();
 	}
 
-	public WordSearch(int rows, int cols, String filename, int randSeed, String answers) throws FileNotFoundException{
+	public WordSearch(int rows, int cols, String filename, int randSeed, String answers) throws FileNotFoundException, NumberFormatException{
 		data = new char[rows][cols];
   	for (int i = 0; i < rows; i++) {
   		for (int j = 0; j < cols; j++) {
@@ -273,20 +273,49 @@ public class WordSearch {
 		WordSearch puzzle = null;
 
   	if (args.length > 2) {
-  		row = Integer.parseInt(args[0]);
-  		col = Integer.parseInt(args[1]);
+  		try {
+  			row = Integer.parseInt(args[0]);
+  			col = Integer.parseInt(args[1]);
+  		} catch (NumberFormatException e) {
+  			System.out.println("=============");
+  			System.out.println("Something went wrong: improper number formatting. Please check to make sure row and col are integers.");
+  			System.out.println("=============");
+  			System.exit(1);
+  		}
+
   		filename = args[2];
 
-  		if (args.length > 3) {
-  			randSeed = Integer.parseInt(args[3]);
+  		if (row <= 0 || col <= 0) {
+  			System.out.println("=============");
+  			System.out.println("Something went wrong: either your row or col (or both) is out of bounds. Please check to make sure that your row and col are both greater than 0. ");
+  			System.out.println("=============");
+  			System.exit(1);
+  		}
+  		else if (args.length > 3) {
+  			try {
+  				randSeed = Integer.parseInt(args[3]);
+  			} catch (NumberFormatException e) {
+  				System.out.println("=============");
+  				System.out.println("Something went wrong: improper number formatting. Please check to make sure randSeed is an integer.");
+  				System.out.println("=============");
+  				System.exit(1);
+  			}
+  			if (randSeed < 0 || randSeed > 10000) {
+  				System.out.println("=============");
+  				System.out.println("Something went wrong: randSeed is out of bounds. Please check to make sure that your seed is between 0 and 10,000 (inclusive).");
+  				System.out.println("=============");
+  				System.exit(1);
+  			}
   			
-  			if (args.length > 4) {
+  			else if (args.length > 4) {
   				answers = args[4];
   				try {
       			puzzle = new WordSearch(row, col, filename, randSeed, answers);
       			System.out.println(puzzle);
-    			} catch (Exception e) {
-
+    			} catch (FileNotFoundException e) {
+    				System.out.println("=============");
+  					System.out.println("Something went wrong: please enter a valid file name, "+args[2]+" does not seem to exist!");
+  					System.out.println("=============");
     			}
   			}
 
@@ -294,8 +323,10 @@ public class WordSearch {
   				try {
       			puzzle = new WordSearch(row, col, filename, randSeed);
       			System.out.println(puzzle);
-    			} catch (Exception e) {
-
+    			} catch (FileNotFoundException e) {
+    				System.out.println("=============");
+  					System.out.println("Something went wrong: please enter a valid file name, "+args[2]+" does not seem to exist!");
+  					System.out.println("=============");
     			}
   			}
   		}
@@ -304,10 +335,20 @@ public class WordSearch {
   			try {
       		puzzle = new WordSearch(row, col, filename);
       		System.out.println(puzzle);
-    		} catch (Exception e) {
-
+    		} catch (FileNotFoundException e) {
+    			System.out.println("=============");
+  				System.out.println("Something went wrong: please enter a valid file name, "+args[2]+" does not seem to exist!");
+  				System.out.println("=============");
     		}
   		}
+  	}
+  	else {
+  		System.out.println("=============");
+  		System.out.println("Something went wrong: there must be at least 3 command line arguments to create the word search! That means at least 2 integers that define the size of the puzzle and the name of the file that the words in the puzzle come from.");
+  		System.out.println("Ex: $java WordSearch 20 20 words.txt");
+  		System.out.println("\nIn addition, you can also include an integer to determine the seed of the puzzle and a string, \"key\", which will trigger answer mode.");
+  		System.out.println("Ex: $java WordSearch 20 20 words.txt 100 key");
+  		System.out.println("=============");
   	}
   }
 
